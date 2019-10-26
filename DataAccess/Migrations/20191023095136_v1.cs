@@ -7,15 +7,16 @@ namespace DataAccess.Migrations
         protected override void Up(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.CreateTable(
-                name: "Aisles",
+                name: "Ailes",
                 columns: table => new
                 {
                     AisleID = table.Column<int>(nullable: false)
-                        .Annotation("SqlServer:Identity", "1, 1")
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    AisleNumber = table.Column<int>(nullable: false)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_Aisles", x => x.AisleID);
+                    table.PrimaryKey("PK_Ailes", x => x.AisleID);
                 });
 
             migrationBuilder.CreateTable(
@@ -30,9 +31,9 @@ namespace DataAccess.Migrations
                 {
                     table.PrimaryKey("PK_Shelves", x => x.ShelfID);
                     table.ForeignKey(
-                        name: "FK_Shelves_Aisles_AisleID",
+                        name: "FK_Shelves_Ailes_AisleID",
                         column: x => x.AisleID,
-                        principalTable: "Aisles",
+                        principalTable: "Ailes",
                         principalColumn: "AisleID",
                         onDelete: ReferentialAction.Cascade);
                 });
@@ -49,7 +50,7 @@ namespace DataAccess.Migrations
                 name: "Shelves");
 
             migrationBuilder.DropTable(
-                name: "Aisles");
+                name: "Ailes");
         }
     }
 }

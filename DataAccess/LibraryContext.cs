@@ -12,7 +12,8 @@ namespace DataAccess
         {
             optionsBuilder.UseSqlServer("Server=MSI;Database=Library;Trusted_connection=true");
         }
-        public DbSet<Aisle> Aisles { get; set; }
+        public DbSet<Aisle> Ailes { get; set; }
         public DbSet<Shelf> Shelves { get; set; }
+        public DbSet<Book> Books { get; set; }
     }
 }

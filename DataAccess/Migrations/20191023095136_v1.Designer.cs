@@ -9,7 +9,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace DataAccess.Migrations
 {
     [DbContext(typeof(LibraryContext))]
-    [Migration("20191023081837_v1")]
+    [Migration("20191023095136_v1")]
     partial class v1
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -27,9 +27,12 @@ namespace DataAccess.Migrations
                         .HasColumnType("int")
                         .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
+                    b.Property<int>("AisleNumber")
+                        .HasColumnType("int");
+
                     b.HasKey("AisleID");
 
-                    b.ToTable("Aisles");
+                    b.ToTable("Ailes");
                 });
 
             modelBuilder.Entity("IDataInterface.Shelf", b =>

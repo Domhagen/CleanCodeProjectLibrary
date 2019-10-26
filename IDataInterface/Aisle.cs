@@ -11,6 +11,7 @@ namespace IDataInterface
         [Key]
         [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         public int AisleID { get; set; }
+        public int AisleNumber { get; set; }
         public ICollection<Shelf> Shelf { get; set; }
     }
 }

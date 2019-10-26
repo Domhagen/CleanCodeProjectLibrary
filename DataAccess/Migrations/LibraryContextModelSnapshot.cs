@@ -25,9 +25,12 @@ namespace DataAccess.Migrations
                         .HasColumnType("int")
                         .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
+                    b.Property<int>("AisleNumber")
+                        .HasColumnType("int");
+
                     b.HasKey("AisleID");
 
-                    b.ToTable("Aisles");
+                    b.ToTable("Ailes");
                 });
 
             modelBuilder.Entity("IDataInterface.Shelf", b =>
