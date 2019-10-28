@@ -15,6 +15,8 @@ namespace IDataInterface
         public int BookCondition { get; set; }
         public int ISBNNumber { get; set; }
         public int ShelfID { get; set; }
-        public Shelf shelf { get; set; }
+        public Shelf Shelf { get; set; }
+        public int CustomerID { get; set; }
+        public Customer customer { get; set; }
     }
 }

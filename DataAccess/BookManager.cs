@@ -2,6 +2,8 @@
 using System;
 using System.Collections.Generic;
 using System.Text;
+using System.Linq;
+using Microsoft.EntityFrameworkCore;
 
 namespace DataAccess
 {
@@ -13,6 +15,25 @@ namespace DataAccess
             var book = new Book();
             book.BookNumber = bookNumber;
             context.Books.Add(book);
+            context.SaveChanges();
+        }
+        public Book GetBookByBookNumber(int bookNumber)
+        {
+            using var context = new LibraryContext();
+            return (from b in context.Books
+                    where b.BookNumber == bookNumber
+                    select b)
+                    .Include(b => b.Shelf)
+                    .FirstOrDefault();
+        }
+        public void MoveBook(int bookID, int shelfID)
+        {
+            using var context = new LibraryContext();
+            var book = (from b in context.Books
+                        where b.BookID == bookID
+                        select b)
+                        .First();
+            book.ShelfID = shelfID;
             context.SaveChanges();
         }
     }

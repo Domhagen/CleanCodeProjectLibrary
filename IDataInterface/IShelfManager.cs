@@ -9,5 +9,6 @@ namespace IDataInterface
         void AddShelf(int shelfNumber);
         Shelf GetShelfByShelfNumber(int shelfNumber);
         void MoveShelf(int shelfID, int aisleID);
+        void RemoveShelf(int shelfID);
     }
 }

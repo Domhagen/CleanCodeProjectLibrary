@@ -1,4 +1,6 @@
-﻿using System;
+﻿using DataAccess;
+using IDataInterface;
+using System;
 
 namespace Library
 {
@@ -6,6 +8,10 @@ namespace Library
     {
         static void Main(string[] args)
         {
+            ICustomerManager customerManager = new CustomerManager();
+
+
+
             Console.WriteLine("Hello World!");
         }
     }

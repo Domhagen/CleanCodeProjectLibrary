@@ -6,15 +6,17 @@ using DataAccess;
 
 namespace Library
 {
-    public class FurnishingAPI
+    public class LibraryAPI
     {
         private IAisleManager aisleManager;
         private IShelfManager shelfManager;
+        private IBookManager bookManager;
 
-        public FurnishingAPI(IAisleManager aisleManager, IShelfManager shelfManager)
+        public LibraryAPI(IAisleManager aisleManager, IShelfManager shelfManager, IBookManager bookManager)
         {
             this.aisleManager = aisleManager;
             this.shelfManager = shelfManager;
+            this.bookManager = bookManager;
         }
         public bool AddAisle(int aisleNumber)
         {
@@ -38,7 +40,6 @@ namespace Library
 
             return RemoveAisleErrorCodes.Ok;
         }
-
         public bool AddShelf(int shelfNumber)
         {
             var avaibleShelf = shelfManager.GetShelfByShelfNumber(shelfNumber);
@@ -64,6 +65,45 @@ namespace Library
             shelfManager.MoveShelf(shelf.ShelfID, newAisle.AisleID);
             
             return MoveShelfErrorCodes.Ok;
+        }
+        public RemoveShelfErrorCodes RemoveShelf(int shelfNumber)
+        {
+            var newShelf = shelfManager.GetShelfByShelfNumber(shelfNumber);
+            if (newShelf == null)
+                return RemoveShelfErrorCodes.NoSuchShelf;
+
+            if (newShelf.Book.Count > 0)
+                return RemoveShelfErrorCodes.ShelfHasBooks;
+
+            shelfManager.RemoveShelf(newShelf.ShelfID);
+
+            return RemoveShelfErrorCodes.Ok;
+        }
+        public bool AddBook(int bookNumber)
+        {
+            var existingBook = bookManager.GetBookByBookNumber(bookNumber);
+            if (existingBook != null)
+                return false;
+            bookManager.AddBook(bookNumber);
+
+            return true;
+        }
+        public MoveBookErrorCodes MoveBook(int bookNumber, int shelfNumber)
+        {
+            var newShelf = shelfManager.GetShelfByShelfNumber(shelfNumber);
+            if (newShelf == null)
+                return MoveBookErrorCodes.NoSuchShelf;
+
+            var book = bookManager.GetBookByBookNumber(bookNumber);
+            if (book == null)
+                return MoveBookErrorCodes.NoSuchBook;
+            if (book.Shelf.ShelfNumber == shelfNumber)
+                return MoveBookErrorCodes.BookAlreadyAtThatShelf;
+
+            bookManager.MoveBook(book.BookID, newShelf.ShelfID);
+
+            return MoveBookErrorCodes.Ok;
+
         }
     }
 }

@@ -1,0 +1,250 @@
+﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
+using System;
+using System.Collections.Generic;
+using System.Text;
+using Moq;
+using IDataInterface;
+using Library;
+using System.Linq;
+
+namespace UnitTests
+{
+    [TestClass]
+    public class LibraryAPITests
+    {
+        [TestMethod]
+        public void TestAddAisle()
+        {
+            Mock<IAisleManager> aisleManagerMock = SetupMockAisle(null);
+            bool successfull = AddAisleNumberOne(aisleManagerMock);
+            Assert.IsTrue(successfull);
+            aisleManagerMock.Verify(m =>
+                m.AddAisle(It.Is<int>(i => i == 1)),
+                    Times.Once());
+        }
+        [TestMethod]
+        public void TestAddExistingAisle()
+        {
+            var aisleManagerMock = SetupMockAisle(new Aisle());
+            bool successfull = AddAisleNumberOne(aisleManagerMock);
+            Assert.IsFalse(successfull);
+            aisleManagerMock.Verify(m =>
+                m.AddAisle(It.Is<int>(i => i == 1)),
+                    Times.Never());
+        }
+        [TestMethod]
+        public void TestRemoveEmptyAisle()
+        {
+            var aisleManagerMock = new Mock<IAisleManager>();
+            var shelfManagerMock = new Mock<IShelfManager>();
+
+            aisleManagerMock.Setup(m =>
+            m.GetAisleByAisleNumber(It.IsAny<int>()))
+                .Returns(new Aisle 
+                { 
+                    AisleNumber = 4,
+                    Shelf = new List<Shelf>()
+                });
+
+            var libraryAPI = new LibraryAPI(aisleManagerMock.Object, shelfManagerMock.Object, null);
+            var successfull = libraryAPI.RemoveAisle(4);
+            Assert.AreEqual(RemoveAisleErrorCodes.Ok, successfull);
+            aisleManagerMock.Verify(m => 
+                m.RemoveAisle(It.IsAny<int>()), Times.Once);
+        }
+        [TestMethod]
+        public void TestRemoveAisleWithOneShelf()
+        {
+            var aisleManagerMock = new Mock<IAisleManager>();
+            var shelfManagerMock = new Mock<IShelfManager>();
+
+            aisleManagerMock.Setup(m =>
+            m.GetAisleByAisleNumber(It.IsAny<int>()))
+                .Returns(new Aisle 
+                { 
+                    AisleNumber = 4, 
+                    Shelf = new List<Shelf>
+                    {
+                        new Shelf()
+                    }
+                });
+
+            var libraryAPI = new LibraryAPI(aisleManagerMock.Object, shelfManagerMock.Object, null);
+            var successfull = libraryAPI.RemoveAisle(4);
+            Assert.AreEqual(RemoveAisleErrorCodes.AisleHasShelves, successfull);
+            aisleManagerMock.Verify(m =>
+                m.RemoveAisle(It.IsAny<int>()), Times.Never);
+        }
+        [TestMethod]
+        public void TestRemoveNonexistentAisle()
+        {
+            var aisleManagerMock = new Mock<IAisleManager>();
+            var shelfManagerMock = new Mock<IShelfManager>();
+
+            aisleManagerMock.Setup(m =>
+            m.GetAisleByAisleNumber(It.IsAny<int>()))
+                .Returns((Aisle)null);
+
+            var libraryAPI = new LibraryAPI(aisleManagerMock.Object, shelfManagerMock.Object, null);
+            var successfull = libraryAPI.RemoveAisle(4);
+            Assert.AreEqual(RemoveAisleErrorCodes.NoSuchAisle, successfull);
+            aisleManagerMock.Verify(m =>
+                m.RemoveAisle(It.IsAny<int>()), Times.Never);
+        }
+        [TestMethod]
+        public void TestAddShelf()
+        {
+            var shelfManagerMock = new Mock<IShelfManager>();
+            var aisleManagerMock = new Mock<IAisleManager>();
+
+            shelfManagerMock.Setup(m =>
+            m.AddShelf(It.IsAny<int>()));
+
+            shelfManagerMock.Setup(m =>
+            m.GetShelfByShelfNumber(It.IsAny<int>()));
+
+            var libraryAPI = new LibraryAPI(aisleManagerMock.Object, shelfManagerMock.Object, null);
+            var successfull = libraryAPI.AddShelf(1);
+            Assert.IsTrue(successfull);
+            shelfManagerMock.Verify(m =>
+                m.AddShelf(It.Is<int>(i => i == 1)),
+                    Times.Once());
+        }
+        [TestMethod]
+        public void TestMoveShelfOk()
+        {
+            var aisleManagerMock = new Mock<IAisleManager>();
+            var shelfManagerMock = new Mock<IShelfManager>();
+
+            aisleManagerMock.Setup(m =>
+               m.GetAisleByAisleNumber(It.IsAny<int>()))
+                .Returns(new Aisle { AisleID = 2 });
+
+            shelfManagerMock.Setup(m =>
+                m.GetShelfByShelfNumber(It.IsAny<int>()))
+                .Returns(new Shelf 
+                { 
+                    ShelfID = 2,
+                    Aisle = new Aisle()
+                });
+
+            var libraryAPI = new LibraryAPI(aisleManagerMock.Object, shelfManagerMock.Object, null);
+            var result = libraryAPI.MoveShelf(1, 1);
+            Assert.AreEqual(MoveShelfErrorCodes.Ok, result);
+            shelfManagerMock.Verify(m =>
+            m.MoveShelf(2, 2), Times.Once());
+        }
+        [TestMethod]
+        public void TestRemoveEmptyShelf()
+        {
+            var bookManagerMock = new Mock<IBookManager>();
+            var shelfManagerMock = new Mock<IShelfManager>();
+
+            shelfManagerMock.Setup(m =>
+            m.GetShelfByShelfNumber(It.IsAny<int>()))
+                .Returns(new Shelf
+                {
+                    ShelfNumber = 4,
+                    Book = new List<Book>()
+                });
+
+            var libraryAPI = new LibraryAPI(null, shelfManagerMock.Object, bookManagerMock.Object);
+            var successfull = libraryAPI.RemoveShelf(4);
+            Assert.AreEqual(RemoveShelfErrorCodes.Ok, successfull);
+            shelfManagerMock.Verify(m =>
+                m.RemoveShelf(It.IsAny<int>()), Times.Once);
+        }
+        private static Mock<IAisleManager> SetupMockAisle(Aisle aisle)
+        {
+            var aisleManagerMock = new Mock<IAisleManager>();
+
+            aisleManagerMock.Setup(m =>
+                    m.GetAisleByAisleNumber(It.IsAny<int>()))
+                .Returns(aisle);
+
+            aisleManagerMock.Setup(m =>
+                m.AddAisle(It.IsAny<int>()));
+            return aisleManagerMock;
+        }
+        private static bool AddAisleNumberOne(Mock<IAisleManager> aisleManagerMock)
+        {
+            var libraryAPI = new LibraryAPI(aisleManagerMock.Object, null, null);
+            var successfull = libraryAPI.AddAisle(1);
+            return successfull;
+        }
+        [TestMethod]
+        public void TestAddBook()
+        {
+            var shelfManagerMock = new Mock<IShelfManager>();
+            var bookManagerMock = new Mock<IBookManager>();
+
+            bookManagerMock.Setup(m =>
+            m.AddBook(It.IsAny<int>()));
+
+            bookManagerMock.Setup(m =>
+            m.GetBookByBookNumber(It.IsAny<int>()));
+
+            var libraryAPI = new LibraryAPI(null, shelfManagerMock.Object, bookManagerMock.Object);
+            var successfull = libraryAPI.AddBook(1);
+            Assert.IsTrue(successfull);
+            bookManagerMock.Verify(m =>
+                m.AddBook(It.Is<int>(i => i == 1)),
+                    Times.Once());
+        }
+        [TestMethod]
+        public void TestAddExistingBook()
+        {
+            var bookManagerMock = SetupMockBook(new Book());
+            var libraryAPI = new LibraryAPI(null, null, bookManagerMock.Object);
+            bool successfull = AddBookNumberOne(bookManagerMock);
+            Assert.IsFalse(successfull);
+            bookManagerMock.Verify(m =>
+                m.AddBook(It.Is<int>(i => i == 1)),
+                Times.Never());
+        }
+
+        private static Mock<IBookManager> SetupMockBook(Book book)
+        {
+            var bookManagerMock = new Mock<IBookManager>();
+
+            bookManagerMock.Setup(m =>
+                    m.GetBookByBookNumber(It.IsAny<int>()))
+                .Returns(book);
+
+            bookManagerMock.Setup(m =>
+                m.AddBook(It.IsAny<int>()));
+            return bookManagerMock;
+        }
+
+        [TestMethod]
+        public void TestMoveBookOk()
+        {
+            var bookManagerMock = new Mock<IBookManager>();
+            var shelfManagerMock = new Mock<IShelfManager>();
+
+            shelfManagerMock.Setup(m =>
+                m.GetShelfByShelfNumber(It.IsAny<int>()))
+                    .Returns(new Shelf { ShelfID = 2 });
+
+            bookManagerMock.Setup(m =>
+                m.GetBookByBookNumber(It.IsAny<int>()))
+                    .Returns(new Book
+                    {
+                        BookID = 2,
+                        Shelf = new Shelf()
+                    });
+
+            var libraryAPI = new LibraryAPI(null, shelfManagerMock.Object, bookManagerMock.Object);
+            var result = libraryAPI.MoveBook(1, 1);
+            Assert.AreEqual(MoveBookErrorCodes.Ok, result);
+            bookManagerMock.Verify(m =>
+                m.MoveBook(2, 2), Times.Once());
+        }
+        private static bool AddBookNumberOne(Mock<IBookManager> bookManagerMock)
+        {
+            var libraryAPI = new LibraryAPI(null, null, bookManagerMock.Object);
+            var successfull = libraryAPI.AddBook(1);
+            return successfull;
+        }
+    }
+}

@@ -36,5 +36,14 @@ namespace DataAccess
             shelf.AisleID = aisleID;
             context.SaveChanges();
         }
+        public void RemoveShelf(int shelfID)
+        {
+            using var context = new LibraryContext();
+            var shelf = (from s in context.Shelves
+                         where s.ShelfID == shelfID
+                         select s).FirstOrDefault();
+            context.Shelves.Remove(shelf);
+            context.SaveChanges();
+        }
     }
 }
