@@ -9,6 +9,6 @@ namespace IDataInterface
         Ok,
         NoSuchBook,
         BookAlreadyAtThatShelf,
-        NoSuchShelf
+        NoSuchShelf,
     }
 }

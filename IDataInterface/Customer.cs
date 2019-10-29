@@ -8,6 +8,8 @@ namespace IDataInterface
     {
         public int CustomerID { get; set; }
         public int CustomerNumber { get; set; }
+        public string CustomerIDNumber { get; set; }
+        public string CustomerAdress { get; set; }
         public ICollection<Book> Book { get; set; }
     }
 }

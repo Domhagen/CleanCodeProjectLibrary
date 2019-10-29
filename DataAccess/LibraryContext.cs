@@ -16,5 +16,7 @@ namespace DataAccess
         public DbSet<Shelf> Shelves { get; set; }
         public DbSet<Book> Books { get; set; }
         public DbSet<Customer> Customers { get; set; }
+        public DbSet<Lending> Lendings { get; set; }
+        public DbSet<TimeSlot> TimeSlots { get; set; }
     }
 }
