@@ -14,30 +14,14 @@ namespace UnitTests
         [TestMethod]
         public void TestReturnBookFromCustomer()
         {
-            ReturnAPI returnAPI = SetupTestData();
-            var result = returnAPI.ReturnBook(1, 0);
-            Assert.IsTrue(result.Equals(ReturnBookErrorCodes.Ok));
-        }
-        private static ReturnAPI SetupTestData()
-        {
+            var bookManager = new Mock<IBookManager>();
             var returnManager = new Mock<IReturnManager>();
             var customerManager = new Mock<ICustomerManager>();
-            var returnAPI = new ReturnAPI(customerManager.Object, returnManager.Object, null);
-            customerManager.Setup(m =>
-                m.GetAllCustomers())
-                 .Returns(new List<Customer>
-                 {
-                     new Customer
-                     {
-                         CustomerID = 1,
-                         Book = new List<Book>
-                         {
-                             new Book(),
-                             new Book()
-                         }
-                     }
-                 });
-            return returnAPI;
+            var returnAPI = new ReturnAPI(customerManager.Object, returnManager.Object, bookManager.Object);
+            var successfull = returnAPI.ReturnBook(0, 0);
+            Assert.AreEqual(ReturnBookErrorCodes.Ok, successfull);
+            returnManager.Verify(m =>
+                m.ReturnBookFromCustomer(0, 0), Times.Once);
         }
     }
 }

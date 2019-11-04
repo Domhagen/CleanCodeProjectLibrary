@@ -18,5 +18,6 @@ namespace IDataInterface
         public Shelf Shelf { get; set; }
         public int CustomerID { get; set; }
         public Customer Customer { get; set; }
+        public ICollection<Return> Return { get; set; }
     }
 }

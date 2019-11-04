@@ -11,5 +11,9 @@ namespace IDataInterface
         [Key]
         [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         public int ReturnID { get; set; }
+        public int BookID { get; set; }
+        public Book Book { get; set; }
+        public int CustomerID { get; set; }
+        public Customer Customer { get; set; }
     }
 }

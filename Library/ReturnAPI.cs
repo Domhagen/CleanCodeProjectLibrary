@@ -19,18 +19,13 @@ namespace Library
         }
         public ReturnBookErrorCodes ReturnBook(int customerNumber, int bookNumber)
         {
-            var customer = customerManager.GetCustomerByCustomerNumber(customerNumber);
-            if (customer == null)
-                return ReturnBookErrorCodes.NoSuchCustomer;
-
             var book = bookManager.GetBookByBookNumber(bookNumber);
-            if (book == null)
-                return ReturnBookErrorCodes.NoSuchBook;
-            if (book.Customer.CustomerNumber == customerNumber)
+            if (book != null)
                 return ReturnBookErrorCodes.CustomerHaveTheBook;
-
-            returnManager.ReturnBookFromCustomer(book.BookID, customer.CustomerID);
-
+            var customer = customerManager.GetCustomerByCustomerNumber(customerNumber);
+            if (customer != null)
+                return ReturnBookErrorCodes.CustomerHaveTheBook;
+            returnManager.ReturnBookFromCustomer(bookNumber, customerNumber);
             return ReturnBookErrorCodes.Ok;
         }
     }
