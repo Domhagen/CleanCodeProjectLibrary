@@ -17,6 +17,6 @@ namespace IDataInterface
         public int ShelfID { get; set; }
         public Shelf Shelf { get; set; }
         public int CustomerID { get; set; }
-        public Customer customer { get; set; }
+        public Customer Customer { get; set; }
     }
 }

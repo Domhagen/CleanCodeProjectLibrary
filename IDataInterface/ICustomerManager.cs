@@ -8,5 +8,6 @@ namespace IDataInterface
     {
         void AddCustomer(int customerNumber);
         Customer GetCustomerByCustomerNumber(int customerNumber);
+        void RemoveCustomer(int customerID);
     }
 }

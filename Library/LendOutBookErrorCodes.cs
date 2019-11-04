@@ -7,6 +7,8 @@ namespace Library
     public enum LendOutBookErrorCodes
     {
         BookNotAvaible,
+        CustomerHasFiveBooks,
+        CustomerHasDebt,
         Ok
     }
 }

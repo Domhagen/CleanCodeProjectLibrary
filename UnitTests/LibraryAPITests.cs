@@ -42,12 +42,12 @@ namespace UnitTests
             m.GetAisleByAisleNumber(It.IsAny<int>()))
                 .Returns(new Aisle 
                 { 
-                    AisleNumber = 4,
+                    AisleNumber = 2,
                     Shelf = new List<Shelf>()
                 });
 
             var libraryAPI = new LibraryAPI(aisleManagerMock.Object, shelfManagerMock.Object, null);
-            var successfull = libraryAPI.RemoveAisle(4);
+            var successfull = libraryAPI.RemoveAisle(2);
             Assert.AreEqual(RemoveAisleErrorCodes.Ok, successfull);
             aisleManagerMock.Verify(m => 
                 m.RemoveAisle(It.IsAny<int>()), Times.Once);

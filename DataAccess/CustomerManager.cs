@@ -25,5 +25,14 @@ namespace DataAccess
                     select c)
                     .FirstOrDefault();
         }
+        public void RemoveCustomer(int customerID)
+        {
+            using var context = new LibraryContext();
+            var customer = (from c in context.Customers
+                         where c.CustomerID == customerID
+                         select c).FirstOrDefault();
+            context.Customers.Remove(customer);
+            context.SaveChanges();
+        }
     }
 }

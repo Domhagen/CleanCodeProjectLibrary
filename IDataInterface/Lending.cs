@@ -11,10 +11,11 @@ namespace IDataInterface
         [Key]
         [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         public int LendingID { get; set; }
-        public int LendingNumber { get; set; }
         public int BookID { get; set; }
         public Book Book { get; set; }
         public int TimeSlotID { get; set; }
         public TimeSlot TimeSlot { get; set; }
+        public int CustomerID { get; set; }
+        public Customer Customer { get; set; }
     }
 }

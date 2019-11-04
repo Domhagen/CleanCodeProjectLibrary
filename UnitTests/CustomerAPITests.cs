@@ -40,5 +40,24 @@ namespace UnitTests
                 m.AddCustomer(It.IsAny<int>()));
             return customerManagerMock;
         }
+        [TestMethod]
+        public void TestRemoveEmptyCustomer()
+        {
+            var customerManagerMock = new Mock<ICustomerManager>();
+
+            customerManagerMock.Setup(m =>
+            m.GetCustomerByCustomerNumber(It.IsAny<int>()))
+                .Returns(new Customer
+                {
+                    CustomerNumber = 1,
+                    Book = new List<Book>()
+                });
+
+            var libraryAPI = new CustomerAPI(customerManagerMock.Object);
+            var successfull = libraryAPI.RemoveCustomer(4);
+            Assert.AreEqual(RemoveCustomerErrorCodes.Ok, successfull);
+            customerManagerMock.Verify(m =>
+                m.RemoveCustomer(It.IsAny<int>()), Times.Once);
+        }
     }
 }

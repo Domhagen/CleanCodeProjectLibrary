@@ -6,6 +6,7 @@ namespace IDataInterface
 {
     public interface ILendingManager
     {
-        Book LendOutBookByBookTitle(string bookTitle);
+        void LendOutBook(int bookID, int customerID);
+        List<TimeSlot> GetTimeSlotsFrom(DateTime start);
     }
 }

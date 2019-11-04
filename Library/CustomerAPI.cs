@@ -21,5 +21,18 @@ namespace Library
             customerManager.AddCustomer(customerNumber);
             return true;
         }
+        public RemoveCustomerErrorCodes RemoveCustomer(int customerNumber)
+        {
+            var newCustomer = customerManager.GetCustomerByCustomerNumber(customerNumber);
+            if (newCustomer == null)
+                return RemoveCustomerErrorCodes.NoSuchCustomer;
+
+            if (newCustomer.Book.Count > 0)
+                return RemoveCustomerErrorCodes.CustomerHasBooks;
+
+            customerManager.RemoveCustomer(newCustomer.CustomerID);
+
+            return RemoveCustomerErrorCodes.Ok;
+        }
     }
 }

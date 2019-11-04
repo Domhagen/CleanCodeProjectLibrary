@@ -9,7 +9,7 @@ namespace DataAccess
 {
     public class LendingManager : ILendingManager
     {
-        public TimeSlot FindAvaibleBook(int bookNumber ,DateTime start)
+        public TimeSlot GetAvaibleBook(int bookNumber ,DateTime start)
         {
             var context = new LibraryContext();
             var books = (from b in context.Books
@@ -24,13 +24,22 @@ namespace DataAccess
                              select t);
             return timeSlots.FirstOrDefault();
         }
-        public Book LendOutBookByBookTitle(string bookTitle)
+        public void LendOutBook(int bookID, int customerID)
         {
             using var context = new LibraryContext();
-            return (from b in context.Books
-                    where b.BookTitle == bookTitle
+            var book = (from b in context.Books
+                    where b.BookID == bookID
                     select b)
                     .FirstOrDefault();
+            book.CustomerID = customerID;
+            context.SaveChanges();
+        }
+        public List<TimeSlot> GetTimeSlotsFrom(DateTime start)
+        {
+            using var context = new LibraryContext();
+            return (from s in context.TimeSlots
+                    where s.Start >= start
+                    select s).ToList();
         }
     }
 }
