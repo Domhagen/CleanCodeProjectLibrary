@@ -6,6 +6,6 @@ namespace IDataInterface
 {
     public interface IReturnManager
     {
-        void ReturnBook(int bookID, int customerID, int shelfID);
+        void ReturnBookFromCustomer(int bookID, int customerID);
     }
 }

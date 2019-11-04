@@ -25,6 +25,14 @@ namespace DataAccess
                     select c)
                     .FirstOrDefault();
         }
+        public List<Customer> GetAllCustomers()
+        {
+            using var context = new LibraryContext();
+            return (from c in context.Customers
+                    where !c.Deleted
+                    select c)
+                    .Include(c => c.Book).ToList();
+        }
         public void RemoveCustomer(int customerID)
         {
             using var context = new LibraryContext();

@@ -9,7 +9,7 @@ namespace DataAccess
 {
     public class ReturnManager : IReturnManager
     {
-        public void ReturnBook(int bookID, int customerID, int shelfID)
+        public void ReturnBookFromCustomer(int bookID, int customerID)
         {
             using var context = new LibraryContext();
             var book = (from b in context.Books
@@ -17,7 +17,7 @@ namespace DataAccess
                          select b)
                          .First();
             book.CustomerID = customerID;
-            book.ShelfID = shelfID;
+            context.Books.Remove(book);
             context.SaveChanges();
         }
     }
