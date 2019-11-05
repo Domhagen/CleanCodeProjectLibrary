@@ -8,12 +8,12 @@ namespace IDataInterface
     {
         public int BookID { get; set; }
         public int BookNumber { get; set; }
-        public string BookTitle { get; set; }
-        public string BookAuthor { get; set; }
+        public string Title { get; set; }
+        public string Author { get; set; }
         public int PurchaseYear { get; set; }
         public int PurchaseCost { get; set; }
-        public int BookCondition { get; set; }
-        public int ISBNNumber { get; set; }
+        public int Condition { get; set; }
+        public string ISBN { get; set; }
         public int ShelfID { get; set; }
         public Shelf Shelf { get; set; }
         public int CustomerID { get; set; }

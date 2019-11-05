@@ -179,16 +179,16 @@ namespace UnitTests
             var bookManagerMock = new Mock<IBookManager>();
 
             bookManagerMock.Setup(m =>
-            m.AddBook(It.IsAny<int>()));
+            m.AddBook(It.IsAny<int>(),It.IsAny<string>(), It.IsAny<string>(), It.IsAny<string>()));
 
             bookManagerMock.Setup(m =>
             m.GetBookByBookNumber(It.IsAny<int>()));
 
             var libraryAPI = new LibraryAPI(null, shelfManagerMock.Object, bookManagerMock.Object);
-            var successfull = libraryAPI.AddBook(1);
-            Assert.IsTrue(successfull);
+            var successfull = libraryAPI.AddBook(1, "Astrophysics for People in a Hurry", " Neil Degrasse Tyson", "9780393609394");
+            Assert.AreEqual(AddBookErrorCodes.Ok,successfull);
             bookManagerMock.Verify(m =>
-                m.AddBook(It.Is<int>(i => i == 1)),
+                m.AddBook(It.Is<int>(i => i == 1), It.IsAny<string>(), It.IsAny<string>(), It.IsAny<string>()),
                     Times.Once());
         }
         [TestMethod]
@@ -196,10 +196,10 @@ namespace UnitTests
         {
             var bookManagerMock = SetupMockBook(new Book());
             var libraryAPI = new LibraryAPI(null, null, bookManagerMock.Object);
-            bool successfull = AddBookNumberOne(bookManagerMock);
-            Assert.IsFalse(successfull);
+            var successfull = AddBookNumberOne(bookManagerMock);
+            Assert.AreEqual(AddBookErrorCodes.Ok,successfull);
             bookManagerMock.Verify(m =>
-                m.AddBook(It.Is<int>(i => i == 1)),
+                m.AddBook(It.Is<int>(i => i == 1), It.IsAny<string>(), It.IsAny<string>(), It.IsAny<string>()),
                 Times.Never());
         }
 
@@ -212,7 +212,7 @@ namespace UnitTests
                 .Returns(book);
 
             bookManagerMock.Setup(m =>
-                m.AddBook(It.IsAny<int>()));
+                m.AddBook(It.IsAny<int>(), It.IsAny<string>(), It.IsAny<string>(), It.IsAny<string>()));
             return bookManagerMock;
         }
 
@@ -240,10 +240,10 @@ namespace UnitTests
             bookManagerMock.Verify(m =>
                 m.MoveBook(2, 2), Times.Once());
         }
-        private static bool AddBookNumberOne(Mock<IBookManager> bookManagerMock)
+        private static AddBookErrorCodes AddBookNumberOne(Mock<IBookManager> bookManagerMock)
         {
             var libraryAPI = new LibraryAPI(null, null, bookManagerMock.Object);
-            var successfull = libraryAPI.AddBook(1);
+            var successfull = libraryAPI.AddBook(1, It.IsAny<string>(), It.IsAny<string>(), It.IsAny<string>());
             return successfull;
         }
     }

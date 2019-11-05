@@ -9,11 +9,12 @@ namespace DataAccess
 {
     public class CustomerManager : ICustomerManager
     {
-        public void AddCustomer(int customerNumber)
+        public void AddCustomer(int customerNumber,string customerIDNumber)
         {
             using var context = new LibraryContext();
             var customer = new Customer();
             customer.CustomerNumber = customerNumber;
+            customer.IDNumber = customerIDNumber;
             context.Customers.Add(customer);
             context.SaveChanges();
         }

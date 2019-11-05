@@ -18,14 +18,14 @@ namespace UnitTests
             bool successfull = AddCustomerNumberOne(customerManagerMock);
             Assert.IsTrue(successfull);
             customerManagerMock.Verify(m =>
-                m.AddCustomer(It.Is<int>(i => i == 1)),
+                m.AddCustomer(It.Is<int>(i => i == 1),It.IsAny<string>()),
                 Times.Once());
         }
 
         private static bool AddCustomerNumberOne(Mock<ICustomerManager> customerManagerMock)
         {
             var customerAPI = new CustomerAPI(customerManagerMock.Object);
-            var successfull = customerAPI.AddCustomer(1);
+            var successfull = customerAPI.AddCustomer(1,It.IsAny<string>());
             return successfull;
         }
         private static Mock<ICustomerManager> SetupMockCustomer(Customer customer)
@@ -37,7 +37,7 @@ namespace UnitTests
                 .Returns(customer);
 
             customerManagerMock.Setup(m =>
-                m.AddCustomer(It.IsAny<int>()));
+                m.AddCustomer(It.IsAny<int>(),It.IsAny<string>()));
             return customerManagerMock;
         }
         [TestMethod]

@@ -13,12 +13,12 @@ namespace Library
         {
             this.customerManager = customerManager;
         }
-        public bool AddCustomer(int customerNumber)
+        public bool AddCustomer(int customerNumber, string customerIDNumber)
         {
             var avaibleCustomer = customerManager.GetCustomerByCustomerNumber(customerNumber);
             if (avaibleCustomer != null)
                 return false;
-            customerManager.AddCustomer(customerNumber);
+            customerManager.AddCustomer(customerNumber, customerIDNumber);
             return true;
         }
         public RemoveCustomerErrorCodes RemoveCustomer(int customerNumber)

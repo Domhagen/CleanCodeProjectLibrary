@@ -9,10 +9,13 @@ namespace DataAccess
 {
     public class BookManager : IBookManager
     {
-        public void AddBook(int bookNumber)
+        public void AddBook(int bookNumber, string bookTitle, string bookAuthor, string isbnNumber)
         {
             using var context = new LibraryContext();
             var book = new Book();
+            book.Title = bookTitle;
+            book.Author = bookAuthor;
+            book.ISBN = isbnNumber;
             book.BookNumber = bookNumber;
             context.Books.Add(book);
             context.SaveChanges();
