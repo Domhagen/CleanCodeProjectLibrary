@@ -14,18 +14,19 @@ namespace UnitTests
         [TestMethod]
         public void TestAddCustomer()
         {
-            Mock<ICustomerManager> customerManagerMock = SetupMockCustomer(null);
-            bool successfull = AddCustomerNumberOne(customerManagerMock);
-            Assert.IsTrue(successfull);
+            Mock<ICustomerManager> customerManagerMock = SetupMockCustomer(new Customer());
+
+            var successfull = AddCustomerNumberOne(customerManagerMock);
+
+            Assert.AreEqual(AddCustomerErrorCodes.Ok, successfull);
             customerManagerMock.Verify(m =>
-                m.AddCustomer(It.Is<int>(i => i == 1),It.IsAny<string>()),
+                m.AddCustomer(It.Is<int>(i => i == 1), "9103273877"),
                 Times.Once());
         }
-
-        private static bool AddCustomerNumberOne(Mock<ICustomerManager> customerManagerMock)
+        private static AddCustomerErrorCodes AddCustomerNumberOne(Mock<ICustomerManager> customerManagerMock)
         {
             var customerAPI = new CustomerAPI(customerManagerMock.Object);
-            var successfull = customerAPI.AddCustomer(1,It.IsAny<string>());
+            var successfull = customerAPI.AddCustomer(1, "9103273877");
             return successfull;
         }
         private static Mock<ICustomerManager> SetupMockCustomer(Customer customer)

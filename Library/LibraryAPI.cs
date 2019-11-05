@@ -81,7 +81,6 @@ namespace Library
         }
         public AddBookErrorCodes AddBook(int bookNumber, string bookTitle, string bookAuthor, string isbnNumber)
         {
-
             if (string.IsNullOrEmpty(isbnNumber))
                 return AddBookErrorCodes.ThereIsNoISBNumber;
             if (ValidateISBN(isbnNumber) == false)

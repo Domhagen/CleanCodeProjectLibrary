@@ -13,6 +13,7 @@ namespace Library
         {
             this.customerManager = customerManager;
         }
+        /*
         public bool AddCustomer(int customerNumber, string customerIDNumber)
         {
             var avaibleCustomer = customerManager.GetCustomerByCustomerNumber(customerNumber);
@@ -20,6 +21,32 @@ namespace Library
                 return false;
             customerManager.AddCustomer(customerNumber, customerIDNumber);
             return true;
+        }
+        */
+        public AddCustomerErrorCodes AddCustomer(int customerNumber, string customerIDNumber)
+        {
+
+            if (string.IsNullOrEmpty(customerIDNumber))
+                return AddCustomerErrorCodes.ThereIsNoIDNumber;
+            if (ValidateISBN(customerIDNumber) == false)
+                return AddCustomerErrorCodes.IDNumberNotValid;
+
+            customerManager.AddCustomer(customerNumber, customerIDNumber);
+            return AddCustomerErrorCodes.Ok;
+        }
+        private static bool ValidateISBN(string customerIDNumber)
+        {
+            int sum = 0;
+            for (int i = 0; i < customerIDNumber.Length; i++)
+            {
+                int n = (customerIDNumber[i] - '0')
+                    << (1 - (i & 1));
+                if (n > 9) n -= 9;
+                sum += n;
+            }
+            {
+                return (sum % 10) == 0;
+            }
         }
         public RemoveCustomerErrorCodes RemoveCustomer(int customerNumber)
         {

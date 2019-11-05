@@ -175,7 +175,6 @@ namespace UnitTests
         [TestMethod]
         public void TestAddBook()
         {
-            var shelfManagerMock = new Mock<IShelfManager>();
             var bookManagerMock = new Mock<IBookManager>();
 
             bookManagerMock.Setup(m =>
@@ -184,7 +183,7 @@ namespace UnitTests
             bookManagerMock.Setup(m =>
             m.GetBookByBookNumber(It.IsAny<int>()));
 
-            var libraryAPI = new LibraryAPI(null, shelfManagerMock.Object, bookManagerMock.Object);
+            var libraryAPI = new LibraryAPI(null, null, bookManagerMock.Object);
             var successfull = libraryAPI.AddBook(1, "Astrophysics for People in a Hurry", " Neil Degrasse Tyson", "9780393609394");
             Assert.AreEqual(AddBookErrorCodes.Ok,successfull);
             bookManagerMock.Verify(m =>
