@@ -24,13 +24,22 @@ namespace DataAccess
                              select t);
             return timeSlots.FirstOrDefault();
         }
+        public Book GetBookBybookNumber(int bookNumber)
+        {
+            using var context = new LibraryContext();
+            return (from b in context.Books
+                    where b.BookNumber == bookNumber
+                    select b)
+                    .Include(b => b.Customer)
+                    .FirstOrDefault();
+        }
         public void LendOutBook(int bookID, int customerID)
         {
             using var context = new LibraryContext();
             var book = (from b in context.Books
-                    where b.BookID == bookID
-                    select b)
-                    .FirstOrDefault();
+                        where b.BookID == bookID
+                        select b)
+                        .First();
             book.CustomerID = customerID;
             context.SaveChanges();
         }

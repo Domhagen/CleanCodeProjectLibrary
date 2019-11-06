@@ -13,16 +13,6 @@ namespace Library
         {
             this.customerManager = customerManager;
         }
-        /*
-        public bool AddCustomer(int customerNumber, string customerIDNumber)
-        {
-            var avaibleCustomer = customerManager.GetCustomerByCustomerNumber(customerNumber);
-            if (avaibleCustomer != null)
-                return false;
-            customerManager.AddCustomer(customerNumber, customerIDNumber);
-            return true;
-        }
-        */
         public AddCustomerErrorCodes AddCustomer(int customerNumber, string customerIDNumber)
         {
 
@@ -50,14 +40,15 @@ namespace Library
         }
         public RemoveCustomerErrorCodes RemoveCustomer(int customerNumber)
         {
-            var newCustomer = customerManager.GetCustomerByCustomerNumber(customerNumber);
-            if (newCustomer == null)
+            var customer = customerManager.GetCustomerByCustomerNumber(customerNumber);
+            if (customer == null)
                 return RemoveCustomerErrorCodes.NoSuchCustomer;
-
-            if (newCustomer.Book.Count > 0)
+            if (customer.Book.Count > 0)
                 return RemoveCustomerErrorCodes.CustomerHasBooks;
+            if (customer.Debt.Count > 0)
+                return RemoveCustomerErrorCodes.CustomerHasDebts;
 
-            customerManager.RemoveCustomer(newCustomer.CustomerID);
+            customerManager.RemoveCustomer(customer.CustomerID);
 
             return RemoveCustomerErrorCodes.Ok;
         }

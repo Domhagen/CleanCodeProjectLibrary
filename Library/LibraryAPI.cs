@@ -11,12 +11,14 @@ namespace Library
         private IAisleManager aisleManager;
         private IShelfManager shelfManager;
         private IBookManager bookManager;
+        private ICustomerManager customerManager;
 
-        public LibraryAPI(IAisleManager aisleManager, IShelfManager shelfManager, IBookManager bookManager)
+        public LibraryAPI(IAisleManager aisleManager, IShelfManager shelfManager, IBookManager bookManager, ICustomerManager customerManager)
         {
             this.aisleManager = aisleManager;
             this.shelfManager = shelfManager;
             this.bookManager = bookManager;
+            this.customerManager = customerManager;
         }
         public bool AddAisle(int aisleNumber)
         {
@@ -58,7 +60,6 @@ namespace Library
             var shelf = shelfManager.GetShelfByShelfNumber(shelfNumber);
             if (shelf == null)
                 return MoveShelfErrorCodes.NoSuchShelf;
-
             if (shelf.Aisle.AisleNumber == aisleNumber)
                 return MoveShelfErrorCodes.ShelfAlreadyInThatAisle;
 
@@ -71,7 +72,6 @@ namespace Library
             var newShelf = shelfManager.GetShelfByShelfNumber(shelfNumber);
             if (newShelf == null)
                 return RemoveShelfErrorCodes.NoSuchShelf;
-
             if (newShelf.Book.Count > 0)
                 return RemoveShelfErrorCodes.ShelfHasBooks;
 
@@ -79,7 +79,7 @@ namespace Library
 
             return RemoveShelfErrorCodes.Ok;
         }
-        public AddBookErrorCodes AddBook(int bookNumber, string bookTitle, string bookAuthor, string isbnNumber)
+        public AddBookErrorCodes AddBook(int bookNumber, string bookTitle, string bookAuthor, string isbnNumber, int bookCondition)
         {
             if (string.IsNullOrEmpty(isbnNumber))
                 return AddBookErrorCodes.ThereIsNoISBNumber;
@@ -90,7 +90,7 @@ namespace Library
             if (string.IsNullOrEmpty(bookTitle))
                 return AddBookErrorCodes.BookNotGivenATitle;
 
-            bookManager.AddBook(bookNumber, bookTitle, bookAuthor, isbnNumber);
+            bookManager.AddBook(bookNumber, bookTitle, bookAuthor, isbnNumber, bookCondition);
             return AddBookErrorCodes.Ok;
         }
         private static bool ValidateISBN(string isbnNumber)
@@ -170,6 +170,21 @@ namespace Library
 
             return MoveBookErrorCodes.Ok;
 
+        }
+        public RemoveBookErrorCodes RemoveBookWithCustomer(int bookNumber, int customerNumber)
+        {
+
+            var book = bookManager.GetBookByBookNumber(bookNumber);
+            if (book == null)
+                return RemoveBookErrorCodes.NoSuchBook;
+
+            var customer = customerManager.GetCustomerByCustomerNumber(customerNumber);
+            if (customer.Book.Contains(book))
+                return RemoveBookErrorCodes.BookIsLent;
+
+            bookManager.RemoveBook(book.BookID);
+
+            return RemoveBookErrorCodes.Ok;
         }
     }
 }

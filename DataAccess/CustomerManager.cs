@@ -24,7 +24,10 @@ namespace DataAccess
             return (from c in context.Customers
                     where c.CustomerNumber == customerNumber
                     select c)
+                    .Include(b => b.Book)
+                    .Include(d => d.Debt)
                     .FirstOrDefault();
+                    
         }
         public List<Customer> GetAllCustomers()
         {

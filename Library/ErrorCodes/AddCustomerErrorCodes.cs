@@ -4,9 +4,10 @@ using System.Text;
 
 namespace IDataInterface
 {
-    public enum ReturnBookErrorCodes
+    public enum AddCustomerErrorCodes
     {
         Ok,
-        CustomerHaveTheBook
+        ThereIsNoIDNumber,
+        IDNumberNotValid,
     }
 }

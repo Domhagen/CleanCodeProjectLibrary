@@ -7,26 +7,33 @@ namespace Library
 {
     public class ReturnAPI
     {
-        private ICustomerManager customerManager;
-        private IBookManager bookManager;
         private IReturnManager returnManager;
 
-        public ReturnAPI(ICustomerManager customerManager, IReturnManager returnManager, IBookManager bookManager)
+        public ReturnAPI(IReturnManager returnManager)
         {
-            this.customerManager = customerManager;
-            this.bookManager = bookManager;
             this.returnManager = returnManager;
         }
-        public ReturnBookErrorCodes ReturnBook(int customerNumber, int bookNumber)
+        public ReturnBookErrorCodes ReturnBook(int customerNumber, int bookNumber, int bookCondition)
         {
-            var book = bookManager.GetBookByBookNumber(bookNumber);
-            if (book != null)
-                return ReturnBookErrorCodes.CustomerHaveTheBook;
-            var customer = customerManager.GetCustomerByCustomerNumber(customerNumber);
-            if (customer != null)
-                return ReturnBookErrorCodes.CustomerHaveTheBook;
-            returnManager.ReturnBookFromCustomer(bookNumber, customerNumber);
+            if (BookCondition(bookCondition) == false)
+                return ReturnBookErrorCodes.BookIsTrash;
+
+            returnManager.ReturnBookFromCustomer(bookNumber, customerNumber, bookCondition);
             return ReturnBookErrorCodes.Ok;
+
+        }
+        private static bool BookCondition(int bookCondition)
+        {
+            int n = bookCondition;
+            if (n < 2)
+            {
+                return false;
+            }
+            else
+            {
+                return true;
+            }
+
         }
     }
 }

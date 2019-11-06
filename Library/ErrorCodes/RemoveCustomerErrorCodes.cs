@@ -2,12 +2,13 @@
 using System.Collections.Generic;
 using System.Text;
 
-namespace Library
+namespace IDataInterface
 {
     public enum RemoveCustomerErrorCodes
     {
         NoSuchCustomer,
         CustomerHasBooks,
+        CustomerHasDebts,
         Ok
     }
 }

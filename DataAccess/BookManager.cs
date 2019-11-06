@@ -9,7 +9,7 @@ namespace DataAccess
 {
     public class BookManager : IBookManager
     {
-        public void AddBook(int bookNumber, string bookTitle, string bookAuthor, string isbnNumber)
+        public void AddBook(int bookNumber, string bookTitle, string bookAuthor, string isbnNumber, int bookCondition)
         {
             using var context = new LibraryContext();
             var book = new Book();
@@ -17,6 +17,7 @@ namespace DataAccess
             book.Author = bookAuthor;
             book.ISBN = isbnNumber;
             book.BookNumber = bookNumber;
+            book.Condition = bookCondition;
             context.Books.Add(book);
             context.SaveChanges();
         }
@@ -37,6 +38,17 @@ namespace DataAccess
                         select b)
                         .First();
             book.ShelfID = shelfID;
+            context.SaveChanges();
+        }
+        public void RemoveBook(int bookID)
+        {
+            using var context = new LibraryContext();
+            var book = (from b in context.Books
+                         where b.BookID == bookID
+                         select b)
+                         .Include(b => b.Customer)
+                         .FirstOrDefault();
+            context.Books.Remove(book);
             context.SaveChanges();
         }
     }

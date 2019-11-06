@@ -42,7 +42,7 @@ namespace UnitTests
             return customerManagerMock;
         }
         [TestMethod]
-        public void TestRemoveEmptyCustomer()
+        public void TestRemoveCustomer()
         {
             var customerManagerMock = new Mock<ICustomerManager>();
 
@@ -51,7 +51,8 @@ namespace UnitTests
                 .Returns(new Customer
                 {
                     CustomerNumber = 1,
-                    Book = new List<Book>()
+                    Book = new List<Book>(),
+                    Debt = new List<Debt>()
                 });
 
             var libraryAPI = new CustomerAPI(customerManagerMock.Object);

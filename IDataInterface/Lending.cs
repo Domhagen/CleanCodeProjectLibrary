@@ -6,7 +6,7 @@ using System.Text;
 
 namespace IDataInterface
 {
-    public interface Lending
+    public class Lending
     {
         [Key]
         [DatabaseGenerated(DatabaseGeneratedOption.Identity)]

@@ -14,14 +14,21 @@ namespace UnitTests
         [TestMethod]
         public void TestReturnBookFromCustomer()
         {
-            var bookManager = new Mock<IBookManager>();
-            var returnManager = new Mock<IReturnManager>();
-            var customerManager = new Mock<ICustomerManager>();
-            var returnAPI = new ReturnAPI(customerManager.Object, returnManager.Object, bookManager.Object);
-            var successfull = returnAPI.ReturnBook(0, 0);
+            var returnManagerMock = new Mock<IReturnManager>();
+
+            returnManagerMock.Setup(m =>
+                m.GetCustomerByCustomerNumber(It.IsAny<int>()))
+                    .Returns(new Customer
+                    {
+                        CustomerID = 1,
+                        Book = new List<Book>(),
+                    }); ;
+
+            var returnAPI = new ReturnAPI( returnManagerMock.Object);
+            var successfull = returnAPI.ReturnBook(1, 1, 2);
             Assert.AreEqual(ReturnBookErrorCodes.Ok, successfull);
-            returnManager.Verify(m =>
-                m.ReturnBookFromCustomer(0, 0), Times.Once);
+            returnManagerMock.Verify(m =>
+                m.ReturnBookFromCustomer(1, 1, 2), Times.Once);
         }
     }
 }

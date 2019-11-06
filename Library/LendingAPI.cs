@@ -20,16 +20,16 @@ namespace Library
         }
         public LendOutBookErrorCodes LendOutBook(int bookNumber, int customerNumber)
         {
-            var book = bookManager.GetBookByBookNumber(bookNumber);
             var customer = customerManager.GetCustomerByCustomerNumber(customerNumber);
+            var book = bookManager.GetBookByBookNumber(bookNumber);
             if (book == null)
                 return LendOutBookErrorCodes.BookNotAvaible;
-
-            if (customer.Book.Count < 6)
+            if (customer.Book.Count > 5)
                 return LendOutBookErrorCodes.CustomerHasFiveBooks;
-
             if (customer.Debt.Count > 0)
                 return LendOutBookErrorCodes.CustomerHasDebt;
+
+            lendingManager.LendOutBook(book.BookID, customer.CustomerID);
 
             return LendOutBookErrorCodes.Ok;
         }
