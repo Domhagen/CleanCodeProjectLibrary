@@ -30,6 +30,14 @@ namespace DataAccess
                     .Include(b => b.Shelf)
                     .FirstOrDefault();
         }
+        public List<Book> GetAllBooks()
+        {
+            using var context = new LibraryContext();
+            return (from b in context.Books
+                    where !b.Deleted
+                    select b)
+                    .ToList();
+        }
         public void MoveBook(int bookID, int shelfID)
         {
             using var context = new LibraryContext();

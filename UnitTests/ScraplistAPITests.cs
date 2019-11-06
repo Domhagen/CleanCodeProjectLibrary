@@ -8,30 +8,31 @@ using Library;
 
 namespace UnitTests
 {
+    [TestClass]
     public class ScraplistAPITests
     {
         [TestMethod]
         public void ScraplistNoConditionOverOne()
         {
-            Mock<IScraplistManager> scraplistManagerMock = SetupMock(null);
-            var successfull = AddScraplistOfBooks(scraplistManagerMock);
-
+            ScraplistAPI scraplistAPI = SetUpTestData();
+            var result = scraplistAPI.GetScraplist(1);
+            Assert.IsTrue(Book.Equals(new Book(), result));
         }
-
-        private static AddScraplistOfBooks(Mock<IScraplistManager> scraplistManagerMock)
-        {
-            var scraplistAPI = new ScraplistAPI(scraplistManagerMock.Object, null);
-            var successfull = scraplistAPI.GetScraplist(1);
-            return successfull;
-        }
-
-        private Mock<IScraplistManager> SetupMock(object p)
+        private static ScraplistAPI SetUpTestData()
         {
             var scraplistManagerMock = new Mock<IScraplistManager>();
-
-            scraplistManagerMock.Setup(m =>
-                m.GetScraplist());
-            return scraplistManagerMock;
+            var bookManagerMock = new Mock<IBookManager>();
+            var scraplistAPI = new ScraplistAPI(scraplistManagerMock.Object, bookManagerMock.Object);
+            bookManagerMock.Setup(m =>
+            m.GetAllBooks())
+                .Returns(new List<Book> 
+                { 
+                    new Book
+                    {
+                        Condition = 1,
+                    }
+                });
+            return scraplistAPI;
         }
     }
 }

@@ -17,7 +17,8 @@ namespace Library
         }
         public IEnumerable<Book> GetScraplist(int bookCondition)
         {
-            return GetAllTrashBooks(1, null);   // <<<------ ändra null till lista
+            var books = bookManagerMock.GetAllBooks();
+            return GetAllTrashBooks(1, books);
         }
         private static IEnumerable<Book> GetAllTrashBooks(int bookCondition, List<Book> books)
         {

@@ -12,5 +12,7 @@ namespace IDataInterface
         [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         public int ScraplistID { get; set; }
         public int ScraplistNumber { get; set; }
+        public int BookID { get; set; }
+        public Book book { get; set; }
     }
 }

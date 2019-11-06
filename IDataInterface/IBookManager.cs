@@ -10,5 +10,6 @@ namespace IDataInterface
         Book GetBookByBookNumber(int bookNumber);
         void MoveBook(int bookID, int shelfID);
         void RemoveBook(int bookID);
+        List<Book> GetAllBooks();
     }
 }
