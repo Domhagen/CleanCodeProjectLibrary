@@ -18,5 +18,6 @@ namespace DataAccess
         public DbSet<Customer> Customers { get; set; }
         public DbSet<Lending> Lendings { get; set; }
         public DbSet<TimeSlot> TimeSlots { get; set; }
+        public DbSet<Debt> Debts { get; set; }
     }
 }

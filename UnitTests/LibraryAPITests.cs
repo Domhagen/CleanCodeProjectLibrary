@@ -177,18 +177,60 @@ namespace UnitTests
         {
             var bookManagerMock = new Mock<IBookManager>();
 
-            bookManagerMock.Setup(m =>
-            m.AddBook(It.IsAny<int>(),It.IsAny<string>(), It.IsAny<string>(), It.IsAny<string>(), It.IsAny<int>()));
-
-            bookManagerMock.Setup(m =>
-            m.GetBookByBookNumber(It.IsAny<int>()));
-
             var libraryAPI = new LibraryAPI(null, null, bookManagerMock.Object, null);
             var successfull = libraryAPI.AddBook(1, "Astrophysics for People in a Hurry", " Neil Degrasse Tyson", "9780393609394", 2);
             Assert.AreEqual(AddBookErrorCodes.Ok,successfull);
             bookManagerMock.Verify(m =>
-                m.AddBook(It.Is<int>(i => i == 1), "Astrophysics for People in a Hurry", " Neil Degrasse Tyson", "9780393609394", 2),
+                m.AddBook(It.IsAny<int>(), It.IsAny<string>(), It.IsAny<string>(), It.IsAny<string>(), It.IsAny<int>()),
                     Times.Once());
+        }
+        [TestMethod]
+        public void TestAddBookThereIsNoISBNumber()
+        {
+            var bookManagerMock = new Mock<IBookManager>();
+
+            var libraryAPI = new LibraryAPI(null, null, bookManagerMock.Object, null);
+            var successfull = libraryAPI.AddBook(1, "Astrophysics for People in a Hurry", " Neil Degrasse Tyson", "", 2);
+            Assert.AreEqual(AddBookErrorCodes.ThereIsNoISBNumber, successfull);
+            bookManagerMock.Verify(m =>
+                m.AddBook(It.IsAny<int>(), It.IsAny<string>(), It.IsAny<string>(), It.IsAny<string>(), It.IsAny<int>()),
+                    Times.Never());
+        }
+        [TestMethod]
+        public void TestAddBookISBNNumberNotValid()
+        {
+            var bookManagerMock = new Mock<IBookManager>();
+
+            var libraryAPI = new LibraryAPI(null, null, bookManagerMock.Object, null);
+            var successfull = libraryAPI.AddBook(1, "Astrophysics for People in a Hurry", " Neil Degrasse Tyson", "9780393609395", 2);
+            Assert.AreEqual(AddBookErrorCodes.ISBNNumberNotValid, successfull);
+            bookManagerMock.Verify(m =>
+                m.AddBook(It.IsAny<int>(), It.IsAny<string>(), It.IsAny<string>(), It.IsAny<string>(), It.IsAny<int>()),
+                    Times.Never());
+        }
+        [TestMethod]
+        public void TestAddBookBookNotGivenAnAuthor()
+        {
+            var bookManagerMock = new Mock<IBookManager>();
+
+            var libraryAPI = new LibraryAPI(null, null, bookManagerMock.Object, null);
+            var successfull = libraryAPI.AddBook(1, "Astrophysics for People in a Hurry", null, "9780393609394", 2);
+            Assert.AreEqual(AddBookErrorCodes.BookNotGivenAnAuthor, successfull);
+            bookManagerMock.Verify(m =>
+                m.AddBook(It.IsAny<int>(), It.IsAny<string>(), It.IsAny<string>(), It.IsAny<string>(), It.IsAny<int>()),
+                    Times.Never());
+        }
+        [TestMethod]
+        public void TestAddBookBookNotGivenATitle()
+        {
+            var bookManagerMock = new Mock<IBookManager>();
+
+            var libraryAPI = new LibraryAPI(null, null, bookManagerMock.Object, null);
+            var successfull = libraryAPI.AddBook(1, null, " Neil Degrasse Tyson", "9780393609394", 2);
+            Assert.AreEqual(AddBookErrorCodes.BookNotGivenATitle, successfull);
+            bookManagerMock.Verify(m =>
+                m.AddBook(It.IsAny<int>(), It.IsAny<string>(), It.IsAny<string>(), It.IsAny<string>(), It.IsAny<int>()),
+                    Times.Never());
         }
         [TestMethod]
         public void TestAddExistingBook()
@@ -198,8 +240,8 @@ namespace UnitTests
             var successfull = AddBookNumberOne(bookManagerMock);
             Assert.AreEqual(AddBookErrorCodes.Ok,successfull);
             bookManagerMock.Verify(m =>
-                m.AddBook(It.Is<int>(i => i == 0), It.IsAny<string>(), It.IsAny<string>(), It.IsAny<string>(), It.IsAny<int>()),
-                Times.Never());
+                m.AddBook(It.IsAny<int>(), It.IsAny<string>(), It.IsAny<string>(), It.IsAny<string>(), It.IsAny<int>()),
+                Times.Once());
         }
 
         private static Mock<IBookManager> SetupMockBook(Book book)

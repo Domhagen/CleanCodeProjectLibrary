@@ -24,7 +24,7 @@ namespace Library
             var book = bookManager.GetBookByBookNumber(bookNumber);
             if (book == null)
                 return LendOutBookErrorCodes.BookNotAvaible;
-            if (customer.Book.Count > 5)
+            if (customer.Book.Count == 5)
                 return LendOutBookErrorCodes.CustomerHasFiveBooks;
             if (customer.Debt.Count > 0)
                 return LendOutBookErrorCodes.CustomerHasDebt;

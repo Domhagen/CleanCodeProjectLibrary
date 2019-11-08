@@ -12,11 +12,11 @@ namespace UnitTests
     public class ScraplistAPITests
     {
         [TestMethod]
-        public void ScraplistNoConditionOverOne()
+        public void GetScrapList()
         {
             ScraplistAPI scraplistAPI = SetUpTestData();
-            var result = scraplistAPI.GetScraplist(1);
-            Assert.IsTrue(Book.Equals(new Book(), result));
+            var result = scraplistAPI.GetScraplist();
+            Assert.AreEqual(ScraplistErrorCodes.Ok, result);
         }
         private static ScraplistAPI SetUpTestData()
         {
@@ -29,7 +29,18 @@ namespace UnitTests
                 { 
                     new Book
                     {
-                        Condition = 1,
+                        BookID = 1,
+                        Condition = 1
+                    },
+                    new Book
+                    {
+                        BookID = 2,
+                        Condition = 1
+                    },
+                    new Book
+                    {
+                        BookID = 3,
+                        Condition = 2
                     }
                 });
             return scraplistAPI;

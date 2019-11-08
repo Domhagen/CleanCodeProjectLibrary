@@ -6,7 +6,11 @@ namespace IDataInterface
 {
     public enum ReturnBookErrorCodes
     {
-        BookIsTrash,
+        BookConditionIsOne,
+        BookConditionIsTwo,
+        BookConditionIsThree,
+        BookConditionIsFour,
+        BookConditionIsFive,
         Ok
     }
 }

@@ -16,14 +16,14 @@ namespace UnitTests
         {
             Mock<ICustomerManager> customerManagerMock = SetupMockCustomer(new Customer());
 
-            var successfull = AddCustomerNumberOne(customerManagerMock);
+            var successfull = AddCustomer(customerManagerMock);
 
             Assert.AreEqual(AddCustomerErrorCodes.Ok, successfull);
             customerManagerMock.Verify(m =>
-                m.AddCustomer(It.Is<int>(i => i == 1), "9103273877"),
+                m.AddCustomer(It.IsAny<int>(), It.IsAny<string>()),
                 Times.Once());
         }
-        private static AddCustomerErrorCodes AddCustomerNumberOne(Mock<ICustomerManager> customerManagerMock)
+        private static AddCustomerErrorCodes AddCustomer(Mock<ICustomerManager> customerManagerMock)
         {
             var customerAPI = new CustomerAPI(customerManagerMock.Object);
             var successfull = customerAPI.AddCustomer(1, "9103273877");
@@ -40,6 +40,30 @@ namespace UnitTests
             customerManagerMock.Setup(m =>
                 m.AddCustomer(It.IsAny<int>(),It.IsAny<string>()));
             return customerManagerMock;
+        }
+        [TestMethod]
+        public void TestAddCustomerThereIsNoIDNumber()
+        {
+            var customerManagerMock = new Mock<ICustomerManager>();
+
+            var customerAPI = new CustomerAPI(customerManagerMock.Object);
+            var successfull = customerAPI.AddCustomer(1, "");
+            Assert.AreEqual(AddCustomerErrorCodes.ThereIsNoIDNumber, successfull);
+            customerManagerMock.Verify(m =>
+                m.AddCustomer(It.IsAny<int>(), It.IsAny<string>()),
+                Times.Never());
+        }
+        [TestMethod]
+        public void TestAddCustomerIDNumberNotValid()
+        {
+            var customerManagerMock = new Mock<ICustomerManager>();
+
+            var customerAPI = new CustomerAPI(customerManagerMock.Object);
+            var successfull = customerAPI.AddCustomer(1, "9103273872");
+            Assert.AreEqual(AddCustomerErrorCodes.IDNumberNotValid, successfull);
+            customerManagerMock.Verify(m =>
+                m.AddCustomer(It.IsAny<int>(), It.IsAny<string>()),
+                Times.Never());
         }
         [TestMethod]
         public void TestRemoveCustomer()

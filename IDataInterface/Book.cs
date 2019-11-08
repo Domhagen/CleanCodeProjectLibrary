@@ -19,7 +19,8 @@ namespace IDataInterface
         public int CustomerID { get; set; }
         public Customer Customer { get; set; }
         public ICollection<Return> Return { get; set; }
-        public ICollection<Scraplist> Scraplist { get; set; }
+        public int ScraplistID { get; set; }
+        public Scraplist Scraplist { get; set; }
         public bool Deleted { get; set; }
     }
 }

@@ -36,6 +36,7 @@ namespace DataAccess
             return (from b in context.Books
                     where !b.Deleted
                     select b)
+                    .Include(b => b.Shelf)
                     .ToList();
         }
         public void MoveBook(int bookID, int shelfID)
